@@ -1,3 +1,19 @@
+var NB_STRIPES = 13;
+var COLORS = [
+    "#f0c101",
+    "#90b623",
+    "#6aa74a",
+    "#4e9577",
+    "#357ab5",
+    "#4067aa",
+    "#7b426b",
+    "#974971",
+    "#b4534d",
+    "#c35530",
+    "#d1672b",
+    "#e19202",
+    "#eebf00"
+];
 function getCanvas() {
     var canvas = document.getElementById("canvas");
     if (!canvas) {
@@ -12,8 +28,39 @@ function getContext(canvas) {
     }
     return context;
 }
-function draw() {
+function drawFrame(context, thicknessFrame) {
+    var width = context.canvas.width;
+    var thicknessOuterFrame = thicknessFrame / 4;
+    context.save();
+    context.fillRect(0, 0, width, width);
+    context.clearRect(thicknessOuterFrame, thicknessOuterFrame, width - (thicknessOuterFrame * 2), width - (thicknessOuterFrame * 2));
+    context.strokeRect(thicknessOuterFrame * 2, thicknessOuterFrame * 2, width - (thicknessOuterFrame * 4), width - (thicknessOuterFrame * 4));
+    context.restore();
 }
+function drawColorStripe(context, xOrigin, yOrigin, width, height, color) {
+    context.save();
+    context.fillStyle = color;
+    context.fillRect(xOrigin, yOrigin, width, height);
+    context.restore();
+}
+function draw() {
+    var canvas = getCanvas();
+    var context = getContext(canvas);
+    context.canvas.width = window.innerHeight;
+    context.canvas.height = window.innerHeight;
+    //const frameThickness = 100;
+    //drawFrame(context, frameThickness);
+    var _a = context.canvas, width = _a.width, height = _a.height;
+    var stripeWidth = (width) / NB_STRIPES;
+    console.log(stripeWidth);
+    for (var index = 0; index < NB_STRIPES; ++index) {
+        drawColorStripe(context, stripeWidth * index, 0, stripeWidth, height, COLORS[index]);
+    }
+}
+function reportWindowSize() {
+    draw();
+}
+window.onresize = reportWindowSize;
 window.addEventListener("load", function (event) {
     draw();
 });
