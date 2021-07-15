@@ -34,7 +34,7 @@ function drawFrame(context, thicknessFrame) {
     context.save();
     context.fillRect(0, 0, width, width);
     context.clearRect(thicknessOuterFrame, thicknessOuterFrame, width - (thicknessOuterFrame * 2), width - (thicknessOuterFrame * 2));
-    context.strokeRect(thicknessOuterFrame * 2, thicknessOuterFrame * 2, width - (thicknessOuterFrame * 4), width - (thicknessOuterFrame * 4));
+    context.fillRect(thicknessOuterFrame * 2, thicknessOuterFrame * 2, width - (thicknessOuterFrame * 4), width - (thicknessOuterFrame * 4));
     context.restore();
 }
 function drawColorStripe(context, xOrigin, yOrigin, width, height, color) {
@@ -48,13 +48,16 @@ function draw() {
     var context = getContext(canvas);
     context.canvas.width = window.innerHeight;
     context.canvas.height = window.innerHeight;
-    //const frameThickness = 100;
-    //drawFrame(context, frameThickness);
+    var frameThickness = 150;
+    drawFrame(context, frameThickness);
     var _a = context.canvas, width = _a.width, height = _a.height;
-    var stripeWidth = (width) / NB_STRIPES;
+    var stripeWidth = (width - frameThickness) / NB_STRIPES;
+    var rest = (width - (2.0 * frameThickness)) % NB_STRIPES;
     console.log(stripeWidth);
+    console.log(height);
+    console.log(window.innerHeight);
     for (var index = 0; index < NB_STRIPES; ++index) {
-        drawColorStripe(context, stripeWidth * index, 0, stripeWidth, height, COLORS[index]);
+        drawColorStripe(context, frameThickness / 2 + stripeWidth * index, frameThickness / 2, stripeWidth, height - frameThickness, COLORS[index]);
     }
 }
 function reportWindowSize() {
