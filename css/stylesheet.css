@@ -1,0 +1,22 @@
+body {
+  background: #DDDDDD;
+  color: black;
+}
+
+#canvas{
+  width:  100%;
+  //height: 100%;
+}
+
+
+#main {
+  border: 2px solid purple;
+  display: flex;
+}
+
+#canvas-layout {
+  width: 100%;
+  padding: 12px;
+  border-radius: 3px;
+  background: #CCCCCC;
+}
