@@ -14,7 +14,7 @@ body {
 
 #main {
   //width: 100%;
-  border: 2px solid purple;
+  //border: 2px solid purple;
   display: flex;
   flex-direction: column;
 }

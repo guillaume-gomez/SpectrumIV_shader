@@ -34,6 +34,47 @@
       <p>Made by Guillaume Gomez</p>
     </div>
   </div>
+  <script id="vertex-shader-2d" type="notjs">
+   
+    // an attribute will receive data from a buffer
+    attribute vec4 a_position;
+
+    uniform vec2 u_resolution;
+   
+    // all shaders have a main function
+    void main() {
+      // convert the position from pixels to 0.0 to 1.0
+      vec2 zeroToOne = a_position.xy / u_resolution;
+
+      // convert from 0->1 to 0->2
+      vec2 zeroToTwo = zeroToOne * 2.0;
+
+      // convert from 0->2 to -1->+1 (clipspace)
+      vec2 clipSpace = zeroToTwo - 1.0;
+
+      gl_Position = vec4(clipSpace, 0, 1);
+    }
+   
+  </script>
+   
+  <script id="fragment-shader-2d" type="notjs">
+   
+    // fragment shaders don't have a default precision so we need
+    // to pick one. mediump is a good default
+    precision mediump float;
+
+    uniform vec4 u_color;
+
+    uniform float u_time;
+   
+    void main() {
+      // gl_FragColor is a special variable a fragment shader
+      // is responsible for setting
+      gl_FragColor = u_color;
+    }
+   
+  </script>
+
   <script src="js/app.js"></script>
 </body>
 
