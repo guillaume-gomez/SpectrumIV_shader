@@ -36,29 +36,25 @@ function getContext(canvas: HTMLCanvasElement) : WebGLRenderingContext {
   return context;
 }
 
-
-/*function drawStripe(webGLContext: WebGLRenderingContext, x: number, y: number, width : number, height: number) : void {
-  const x1 = x;
-  const x2 = x + width;
-  const y1 = y;
-  const y2 = y + height;
-  webGLContext.bufferData(webGLContext.ARRAY_BUFFER, new Float32Array([
-     x1, y1,
-     x2, y1,
-     x1, y2,
-     x1, y2,
-     x2, y1,
-     x2, y2,
-  ]), webGLContext.STATIC_DRAW);
-}
-
-*/
 function drawStripe(x: number, y: number, width : number, height: number, color: string | THREE.Color = COLORS[0]) {
   const material = new THREE.MeshBasicMaterial( { color } );
   const plane = new THREE.PlaneGeometry(width, height);
   const planeMesh = new THREE.Mesh(plane, material);
-  planeMesh.position.set(x, y, -0.5);
+  planeMesh.position.set(x, y, -0.3);
   return planeMesh;
+}
+
+function createFrame(frameSize: number) {
+  const material = new THREE.MeshBasicMaterial( { color: 0x000000 } );
+  const plane = new THREE.PlaneGeometry(1, 1);
+  const planeMesh = new THREE.Mesh(plane, material);
+  planeMesh.position.setZ(-0.5);
+
+  const material2 = new THREE.MeshBasicMaterial( { color: 0xFFFFFF } );
+  const plane2 = new THREE.PlaneGeometry(1-frameSize, 1-frameSize);
+  const planeMesh2 = new THREE.Mesh(plane2, material2);
+  planeMesh2.position.setZ(-0.4);
+  return [planeMesh, planeMesh2];
 }
 
 
@@ -80,7 +76,7 @@ function main() {
      0.5, // far
   );
   const scene = new THREE.Scene();
-  const plane = new THREE.PlaneGeometry(0.75, 0.5);
+  const plane = new THREE.PlaneGeometry(0.25, 0.25);
 
 
   const fragmentShaderSourceNode = document.getElementById(FRAGMENT_SHADER_ID)
@@ -98,15 +94,22 @@ function main() {
     uniforms,
   });
 
-  const heightStripe = 1.0;
-  const widthStripe = 1/NB_STRIPES;
+  const matrixHeight = 1.0;
+  const matrixWidth = 1.0;
+  const frameSize = 0.1;
+
+  const heightStripe = matrixHeight - frameSize;
+  const widthStripe = (matrixWidth -frameSize) / NB_STRIPES;
   for(let index = 0; index < NB_STRIPES; ++index) {
-    let stripe = drawStripe(-0.5 + (widthStripe/2) + (index/NB_STRIPES), 0, widthStripe, heightStripe, COLORS[index]);
+    let stripe = drawStripe(-((matrixWidth-frameSize)/2) + (widthStripe/2) + (((matrixWidth - frameSize)*index)/NB_STRIPES), 0, widthStripe, heightStripe, COLORS[index]);
     scene.add(stripe);
   }
 
-  //const planeMesh = new THREE.Mesh(plane, material);
+  const planeMesh = new THREE.Mesh(plane, material);
   //scene.add(planeMesh);
+
+  const frame = createFrame(frameSize);
+  scene.add(...frame);
 
   function resizeRendererToDisplaySize(renderer: THREE.WebGLRenderer) {
     const canvas = renderer.domElement;

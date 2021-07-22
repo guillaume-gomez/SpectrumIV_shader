@@ -52,8 +52,19 @@ function drawStripe(x, y, width, height, color) {
     var material = new THREE.MeshBasicMaterial({ color: color });
     var plane = new THREE.PlaneGeometry(width, height);
     var planeMesh = new THREE.Mesh(plane, material);
-    planeMesh.position.set(x, y, -0.5);
+    planeMesh.position.set(x, y, -0.3);
     return planeMesh;
+}
+function createFrame(frameSize) {
+    var material = new THREE.MeshBasicMaterial({ color: 0x000000 });
+    var plane = new THREE.PlaneGeometry(1, 1);
+    var planeMesh = new THREE.Mesh(plane, material);
+    planeMesh.position.setZ(-0.5);
+    var material2 = new THREE.MeshBasicMaterial({ color: 0xFFFFFF });
+    var plane2 = new THREE.PlaneGeometry(1 - frameSize, 1 - frameSize);
+    var planeMesh2 = new THREE.Mesh(plane2, material2);
+    planeMesh2.position.setZ(-0.4);
+    return [planeMesh, planeMesh2];
 }
 function main() {
     var canvas = getCanvas();
@@ -68,7 +79,7 @@ function main() {
     -0.5, // near,
     0.5);
     var scene = new THREE.Scene();
-    var plane = new THREE.PlaneGeometry(0.75, 0.5);
+    var plane = new THREE.PlaneGeometry(0.25, 0.25);
     var fragmentShaderSourceNode = document.getElementById(FRAGMENT_SHADER_ID);
     if (!fragmentShaderSourceNode) {
         console.error("Cannot find id " + FRAGMENT_SHADER_ID + " in the dom");
@@ -83,14 +94,19 @@ function main() {
         fragmentShader: fragmentShader,
         uniforms: uniforms,
     });
-    var heightStripe = 1.0;
-    var widthStripe = 1 / NB_STRIPES;
+    var matrixHeight = 1.0;
+    var matrixWidth = 1.0;
+    var frameSize = 0.1;
+    var heightStripe = matrixHeight - frameSize;
+    var widthStripe = (matrixWidth - frameSize) / NB_STRIPES;
     for (var index = 0; index < NB_STRIPES; ++index) {
-        var stripe = drawStripe(-0.5 + (widthStripe / 2) + (index / NB_STRIPES), 0, widthStripe, heightStripe, COLORS[index]);
+        var stripe = drawStripe(-((matrixWidth - frameSize) / 2) + (widthStripe / 2) + (((matrixWidth - frameSize) * index) / NB_STRIPES), 0, widthStripe, heightStripe, COLORS[index]);
         scene.add(stripe);
     }
-    //const planeMesh = new THREE.Mesh(plane, material);
-    //scene.add(planeMesh);
+    var planeMesh = new THREE.Mesh(plane, material);
+    scene.add(planeMesh);
+    var frame = createFrame(frameSize);
+    scene.add.apply(scene, frame);
     function resizeRendererToDisplaySize(renderer) {
         var canvas = renderer.domElement;
         var width = canvas.clientWidth;
