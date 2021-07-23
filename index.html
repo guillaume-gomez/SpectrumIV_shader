@@ -84,6 +84,16 @@
    
   </script>
 
+  <script id="fragment-shader-2d-spectrum" type="notjs">
+    
+    uniform vec4 vertexColor; // the input variable from the vertex shader (same name and same type)
+    uniform float iTime;
+
+  void main() {
+      gl_FragColor = vec4(vertexColor.x * sin(iTime), vertexColor.y, vertexColor.z, 1.0);
+    }
+  </script>
+
   <script src="js/app.js"></script>
 </body>
 

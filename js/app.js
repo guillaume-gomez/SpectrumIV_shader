@@ -17,6 +17,7 @@ var COLORS = [
 ];
 var VERTEX_SHADER_ID = "vertex-shader-2d";
 var FRAGMENT_SHADER_ID = "fragment-shader-2d";
+var FRAGMENT_SHADER_ID_SPECTRUM = "fragment-shader-2d-spectrum";
 function getCanvas() {
     var canvas = document.getElementById("canvas");
     if (!canvas) {
@@ -31,22 +32,6 @@ function getContext(canvas) {
     }
     return context;
 }
-/*function drawStripe(webGLContext: WebGLRenderingContext, x: number, y: number, width : number, height: number) : void {
-  const x1 = x;
-  const x2 = x + width;
-  const y1 = y;
-  const y2 = y + height;
-  webGLContext.bufferData(webGLContext.ARRAY_BUFFER, new Float32Array([
-     x1, y1,
-     x2, y1,
-     x1, y2,
-     x1, y2,
-     x2, y1,
-     x2, y2,
-  ]), webGLContext.STATIC_DRAW);
-}
-
-*/
 function drawStripe(x, y, width, height, color) {
     if (color === void 0) { color = COLORS[0]; }
     var material = new THREE.MeshBasicMaterial({ color: color });
@@ -55,10 +40,10 @@ function drawStripe(x, y, width, height, color) {
     planeMesh.position.set(x, y, -0.3);
     return planeMesh;
 }
-function createFrame(frameSize) {
-    var material = new THREE.MeshBasicMaterial({ color: 0x000000 });
+function createFrame(frameSize, materialFrame) {
+    //const material = new THREE.MeshBasicMaterial( { color: 0x000000 } );
     var plane = new THREE.PlaneGeometry(1, 1);
-    var planeMesh = new THREE.Mesh(plane, material);
+    var planeMesh = new THREE.Mesh(plane, materialFrame);
     planeMesh.position.setZ(-0.5);
     var material2 = new THREE.MeshBasicMaterial({ color: 0xFFFFFF });
     var plane2 = new THREE.PlaneGeometry(1 - frameSize, 1 - frameSize);
@@ -86,6 +71,12 @@ function main() {
         return;
     }
     var fragmentShader = fragmentShaderSourceNode.innerText;
+    var fragmentShaderSpectrumSourceNode = document.getElementById(FRAGMENT_SHADER_ID_SPECTRUM);
+    if (!fragmentShaderSpectrumSourceNode) {
+        console.error("Cannot find id " + FRAGMENT_SHADER_ID_SPECTRUM + " in the dom");
+        return;
+    }
+    var fragmentShaderSpectrum = fragmentShaderSpectrumSourceNode.innerText;
     var uniforms = {
         iTime: { value: 0 },
         iResolution: { value: new THREE.Vector3() },
@@ -93,6 +84,14 @@ function main() {
     var material = new THREE.ShaderMaterial({
         fragmentShader: fragmentShader,
         uniforms: uniforms,
+    });
+    var uniformsSpectrum = {
+        iTime: { value: 1 },
+        vertexColor: { value: new THREE.Vector4(1, 1, 1, 1) },
+    };
+    var materialSpectrum = new THREE.ShaderMaterial({
+        fragmentShader: fragmentShaderSpectrum,
+        uniforms: uniformsSpectrum,
     });
     var matrixHeight = 1.0;
     var matrixWidth = 1.0;
@@ -105,7 +104,7 @@ function main() {
     }
     var planeMesh = new THREE.Mesh(plane, material);
     scene.add(planeMesh);
-    var frame = createFrame(frameSize);
+    var frame = createFrame(frameSize, materialSpectrum);
     scene.add.apply(scene, frame);
     function resizeRendererToDisplaySize(renderer) {
         var canvas = renderer.domElement;
@@ -123,6 +122,8 @@ function main() {
         var canvas = renderer.domElement;
         uniforms.iResolution.value.set(canvas.width, canvas.height, 1);
         uniforms.iTime.value = time;
+        uniformsSpectrum.vertexColor.value.set(1, 0, 1, 1);
+        uniformsSpectrum.iTime.value = time;
         renderer.render(scene, camera);
         requestAnimationFrame(render);
     }

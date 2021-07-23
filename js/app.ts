@@ -18,6 +18,7 @@ const COLORS = [
 
 const VERTEX_SHADER_ID = "vertex-shader-2d";
 const FRAGMENT_SHADER_ID = "fragment-shader-2d";
+const FRAGMENT_SHADER_ID_SPECTRUM = "fragment-shader-2d-spectrum";
 
 
 function getCanvas() : HTMLCanvasElement {
@@ -44,10 +45,10 @@ function drawStripe(x: number, y: number, width : number, height: number, color:
   return planeMesh;
 }
 
-function createFrame(frameSize: number) {
-  const material = new THREE.MeshBasicMaterial( { color: 0x000000 } );
+function createFrame(frameSize: number, materialFrame: THREE.ShaderMaterial) {
+  //const material = new THREE.MeshBasicMaterial( { color: 0x000000 } );
   const plane = new THREE.PlaneGeometry(1, 1);
-  const planeMesh = new THREE.Mesh(plane, material);
+  const planeMesh = new THREE.Mesh(plane, materialFrame);
   planeMesh.position.setZ(-0.5);
 
   const material2 = new THREE.MeshBasicMaterial( { color: 0xFFFFFF } );
@@ -85,6 +86,14 @@ function main() {
     return;
   }
   const fragmentShader = fragmentShaderSourceNode.innerText;
+
+  const fragmentShaderSpectrumSourceNode = document.getElementById(FRAGMENT_SHADER_ID_SPECTRUM)
+  if(!fragmentShaderSpectrumSourceNode) {
+    console.error(`Cannot find id ${FRAGMENT_SHADER_ID_SPECTRUM} in the dom`)
+    return;
+  }
+  const fragmentShaderSpectrum = fragmentShaderSpectrumSourceNode.innerText;
+
   const uniforms = {
     iTime: { value: 0 },
     iResolution:  { value: new THREE.Vector3() },
@@ -92,6 +101,15 @@ function main() {
   const material = new THREE.ShaderMaterial({
     fragmentShader,
     uniforms,
+  });
+
+  const uniformsSpectrum = {
+    iTime: { value: 1 },
+    vertexColor:  { value: new THREE.Vector4(1, 1, 1, 1) },
+  };
+  const materialSpectrum = new THREE.ShaderMaterial({
+    fragmentShader: fragmentShaderSpectrum,
+    uniforms: uniformsSpectrum,
   });
 
   const matrixHeight = 1.0;
@@ -106,9 +124,9 @@ function main() {
   }
 
   const planeMesh = new THREE.Mesh(plane, material);
-  //scene.add(planeMesh);
+  scene.add(planeMesh);
 
-  const frame = createFrame(frameSize);
+  const frame = createFrame(frameSize, materialSpectrum);
   scene.add(...frame);
 
   function resizeRendererToDisplaySize(renderer: THREE.WebGLRenderer) {
@@ -130,6 +148,9 @@ function main() {
     const canvas = renderer.domElement;
     uniforms.iResolution.value.set(canvas.width, canvas.height, 1);
     uniforms.iTime.value = time;
+
+    uniformsSpectrum.vertexColor.value.set(1, 0, 1, 1);
+    uniformsSpectrum.iTime.value = time;
 
     renderer.render(scene, camera);
 
