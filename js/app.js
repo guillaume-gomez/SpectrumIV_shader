@@ -37,18 +37,18 @@ function drawStripe(x, y, width, height, color) {
     var material = new THREE.MeshBasicMaterial({ color: color });
     var plane = new THREE.PlaneGeometry(width, height);
     var planeMesh = new THREE.Mesh(plane, material);
-    planeMesh.position.set(x, y, -0.3);
+    planeMesh.position.set(x, y, 0);
     return planeMesh;
 }
-function createFrame(frameSize, materialFrame) {
-    //const material = new THREE.MeshBasicMaterial( { color: 0x000000 } );
+function createFrame(frameSize) {
+    var material = new THREE.MeshBasicMaterial({ color: 0x000000 });
     var plane = new THREE.PlaneGeometry(1, 1);
-    var planeMesh = new THREE.Mesh(plane, materialFrame);
-    planeMesh.position.setZ(-0.5);
+    var planeMesh = new THREE.Mesh(plane, material);
+    planeMesh.position.setZ(-0.1);
     var material2 = new THREE.MeshBasicMaterial({ color: 0xFFFFFF });
-    var plane2 = new THREE.PlaneGeometry(1 - frameSize, 1 - frameSize);
+    var plane2 = new THREE.PlaneGeometry(1 - frameSize / 2, 1 - frameSize / 2);
     var planeMesh2 = new THREE.Mesh(plane2, material2);
-    planeMesh2.position.setZ(-0.4);
+    planeMesh2.position.setZ(-0.1);
     return [planeMesh, planeMesh2];
 }
 function main() {
@@ -87,7 +87,7 @@ function main() {
     });
     var uniformsSpectrum = {
         iTime: { value: 1 },
-        vertexColor: { value: new THREE.Vector4(1, 1, 1, 1) },
+        vertexColor: { value: new THREE.Vector4(0.5, 0, 0, 1) },
     };
     var materialSpectrum = new THREE.ShaderMaterial({
         fragmentShader: fragmentShaderSpectrum,
@@ -95,7 +95,7 @@ function main() {
     });
     var matrixHeight = 1.0;
     var matrixWidth = 1.0;
-    var frameSize = 0.1;
+    var frameSize = 0.2;
     var heightStripe = matrixHeight - frameSize;
     var widthStripe = (matrixWidth - frameSize) / NB_STRIPES;
     for (var index = 0; index < NB_STRIPES; ++index) {
@@ -105,7 +105,7 @@ function main() {
     /*const planeMesh = new THREE.Mesh(plane, material);
     scene.add(planeMesh);
   */
-    var frame = createFrame(frameSize, materialSpectrum);
+    var frame = createFrame(frameSize);
     scene.add.apply(scene, frame);
     function resizeRendererToDisplaySize(renderer) {
         var canvas = renderer.domElement;

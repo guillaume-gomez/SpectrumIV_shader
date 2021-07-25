@@ -41,20 +41,21 @@ function drawStripe(x: number, y: number, width : number, height: number, color:
   const material = new THREE.MeshBasicMaterial( { color } );
   const plane = new THREE.PlaneGeometry(width, height);
   const planeMesh = new THREE.Mesh(plane, material);
-  planeMesh.position.set(x, y, -0.3);
+  planeMesh.position.set(x, y, 0);
   return planeMesh;
 }
 
-function createFrame(frameSize: number, materialFrame: THREE.ShaderMaterial) {
-  //const material = new THREE.MeshBasicMaterial( { color: 0x000000 } );
+function createFrame(frameSize: number) {
+  const material = new THREE.MeshBasicMaterial( { color: 0x000000 } );
   const plane = new THREE.PlaneGeometry(1, 1);
-  const planeMesh = new THREE.Mesh(plane, materialFrame);
-  planeMesh.position.setZ(-0.5);
+  const planeMesh = new THREE.Mesh(plane, material);
+  planeMesh.position.setZ(-0.1);
 
   const material2 = new THREE.MeshBasicMaterial( { color: 0xFFFFFF } );
-  const plane2 = new THREE.PlaneGeometry(1-frameSize, 1-frameSize);
+  const plane2 = new THREE.PlaneGeometry(1-frameSize/2, 1-frameSize/2);
   const planeMesh2 = new THREE.Mesh(plane2, material2);
-  planeMesh2.position.setZ(-0.4);
+  planeMesh2.position.setZ(-0.1);
+
   return [planeMesh, planeMesh2];
 }
 
@@ -105,7 +106,7 @@ function main() {
 
   const uniformsSpectrum = {
     iTime: { value: 1 },
-    vertexColor:  { value: new THREE.Vector4(1, 1, 1, 1) },
+    vertexColor:  { value: new THREE.Vector4(0.5, 0, 0, 1) },
   };
   const materialSpectrum = new THREE.ShaderMaterial({
     fragmentShader: fragmentShaderSpectrum,
@@ -114,7 +115,7 @@ function main() {
 
   const matrixHeight = 1.0;
   const matrixWidth = 1.0;
-  const frameSize = 0.1;
+  const frameSize = 0.2;
 
   const heightStripe = matrixHeight - frameSize;
   const widthStripe = (matrixWidth -frameSize) / NB_STRIPES;
@@ -126,7 +127,7 @@ function main() {
   /*const planeMesh = new THREE.Mesh(plane, material);
   scene.add(planeMesh);
 */
-  const frame = createFrame(frameSize, materialSpectrum);
+  const frame = createFrame(frameSize);
   scene.add(...frame);
 
   function resizeRendererToDisplaySize(renderer: THREE.WebGLRenderer) {
