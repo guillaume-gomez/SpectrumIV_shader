@@ -123,9 +123,9 @@ function main() {
     scene.add(stripe);
   }
 
-  const planeMesh = new THREE.Mesh(plane, material);
+  /*const planeMesh = new THREE.Mesh(plane, material);
   scene.add(planeMesh);
-
+*/
   const frame = createFrame(frameSize, materialSpectrum);
   scene.add(...frame);
 
@@ -149,7 +149,7 @@ function main() {
     uniforms.iResolution.value.set(canvas.width, canvas.height, 1);
     uniforms.iTime.value = time;
 
-    uniformsSpectrum.vertexColor.value.set(1, 0, 1, 1);
+    //uniformsSpectrum.vertexColor.value.set(1, 0, 1, 1);
     uniformsSpectrum.iTime.value = time;
 
     renderer.render(scene, camera);

@@ -102,8 +102,9 @@ function main() {
         var stripe = drawStripe(-((matrixWidth - frameSize) / 2) + (widthStripe / 2) + (((matrixWidth - frameSize) * index) / NB_STRIPES), 0, widthStripe, heightStripe, COLORS[index]);
         scene.add(stripe);
     }
-    var planeMesh = new THREE.Mesh(plane, material);
+    /*const planeMesh = new THREE.Mesh(plane, material);
     scene.add(planeMesh);
+  */
     var frame = createFrame(frameSize, materialSpectrum);
     scene.add.apply(scene, frame);
     function resizeRendererToDisplaySize(renderer) {
@@ -122,7 +123,7 @@ function main() {
         var canvas = renderer.domElement;
         uniforms.iResolution.value.set(canvas.width, canvas.height, 1);
         uniforms.iTime.value = time;
-        uniformsSpectrum.vertexColor.value.set(1, 0, 1, 1);
+        //uniformsSpectrum.vertexColor.value.set(1, 0, 1, 1);
         uniformsSpectrum.iTime.value = time;
         renderer.render(scene, camera);
         requestAnimationFrame(render);
