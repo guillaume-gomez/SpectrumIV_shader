@@ -18,6 +18,17 @@ var COLORS = [
 var VERTEX_SHADER_ID = "vertex-shader-2d";
 var FRAGMENT_SHADER_ID = "fragment-shader-2d";
 var FRAGMENT_SHADER_ID_SPECTRUM = "fragment-shader-2d-spectrum";
+function hexToRgb(hex) {
+    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    if (!result || result.length <= 2) {
+        throw "Error cannot convert ";
+    }
+    return {
+        r: parseInt(result[1], 16),
+        g: parseInt(result[2], 16),
+        b: parseInt(result[3], 16)
+    };
+}
 function getCanvas() {
     var canvas = document.getElementById("canvas");
     if (!canvas) {
@@ -32,9 +43,7 @@ function getContext(canvas) {
     }
     return context;
 }
-function drawStripe(x, y, width, height, color) {
-    if (color === void 0) { color = COLORS[0]; }
-    var material = new THREE.MeshBasicMaterial({ color: color });
+function drawStripe(x, y, width, height, material) {
     var plane = new THREE.PlaneGeometry(width, height);
     var planeMesh = new THREE.Mesh(plane, material);
     planeMesh.position.set(x, y, 0);
@@ -85,21 +94,27 @@ function main() {
         fragmentShader: fragmentShader,
         uniforms: uniforms,
     });
-    var uniformsSpectrum = {
-        iTime: { value: 1 },
-        vertexColor: { value: new THREE.Vector4(0.5, 0, 0, 1) },
-    };
-    var materialSpectrum = new THREE.ShaderMaterial({
-        fragmentShader: fragmentShaderSpectrum,
-        uniforms: uniformsSpectrum,
-    });
     var matrixHeight = 1.0;
     var matrixWidth = 1.0;
     var frameSize = 0.2;
+    var uniformsSpectrums = [];
+    var materialSpectrums = [];
     var heightStripe = matrixHeight - frameSize;
     var widthStripe = (matrixWidth - frameSize) / NB_STRIPES;
     for (var index = 0; index < NB_STRIPES; ++index) {
-        var stripe = drawStripe(-((matrixWidth - frameSize) / 2) + (widthStripe / 2) + (((matrixWidth - frameSize) * index) / NB_STRIPES), 0, widthStripe, heightStripe, COLORS[index]);
+        var rgb = hexToRgb(COLORS[index]);
+        var uniformsSpectrum = {
+            iTime: { value: 1 },
+            //iResolution:  { value: new THREE.Vector3() },
+            vertexColor: { value: new THREE.Vector4(rgb.r / 255, rgb.g / 255, rgb.b / 255, 1) },
+        };
+        uniformsSpectrums.push(uniformsSpectrum);
+        var materialSpectrum = new THREE.ShaderMaterial({
+            fragmentShader: fragmentShaderSpectrum,
+            uniforms: uniformsSpectrum,
+        });
+        materialSpectrums.push(materialSpectrum);
+        var stripe = drawStripe(-((matrixWidth - frameSize) / 2) + (widthStripe / 2) + (((matrixWidth - frameSize) * index) / NB_STRIPES), 0, widthStripe, heightStripe, materialSpectrum);
         scene.add(stripe);
     }
     /*const planeMesh = new THREE.Mesh(plane, material);
@@ -124,7 +139,10 @@ function main() {
         uniforms.iResolution.value.set(canvas.width, canvas.height, 1);
         uniforms.iTime.value = time;
         //uniformsSpectrum.vertexColor.value.set(1, 0, 1, 1);
-        uniformsSpectrum.iTime.value = time;
+        uniformsSpectrums.forEach(function (uniformsSpectrum) {
+            //uniformsSpectrum.iResolution.value.set(canvas.width, canvas.height, 1);
+            uniformsSpectrum.iTime.value = time;
+        });
         renderer.render(scene, camera);
         requestAnimationFrame(render);
     }
