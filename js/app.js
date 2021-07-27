@@ -18,6 +18,7 @@ var COLORS = [
 var VERTEX_SHADER_ID = "vertex-shader-2d";
 var FRAGMENT_SHADER_ID = "fragment-shader-2d";
 var FRAGMENT_SHADER_ID_SPECTRUM = "fragment-shader-2d-spectrum";
+var ENABLE_SHADER_ID = "enable-shader";
 function hexToRgb(hex) {
     var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
     if (!result || result.length <= 2) {
@@ -140,15 +141,33 @@ function main() {
         uniforms.iTime.value = time;
         //uniformsSpectrum.vertexColor.value.set(1, 0, 1, 1);
         uniformsSpectrums.forEach(function (uniformsSpectrum) {
-            //uniformsSpectrum.iResolution.value.set(canvas.width, canvas.height, 1);
-            uniformsSpectrum.iTime.value = time;
+            if (enableShader) {
+                //uniformsSpectrum.iResolution.value.set(canvas.width, canvas.height, 1);
+                uniformsSpectrum.iTime.value = time;
+            }
+            else {
+                //reset
+                uniformsSpectrum.iTime.value = 0.0;
+            }
         });
         renderer.render(scene, camera);
+        // not necessary to rerender
+        //if(enableShader) {
         requestAnimationFrame(render);
+        //}
     }
     requestAnimationFrame(render);
 }
+// global variables
+var enableShader = true;
 window.addEventListener("load", function (event) {
     main();
+    var checkbox = document.getElementById(ENABLE_SHADER_ID);
+    if (checkbox) {
+        checkbox.addEventListener("change", function (event) {
+            var checked = event.target.checked;
+            enableShader = checked;
+        });
+    }
 });
 //# sourceMappingURL=app.js.map

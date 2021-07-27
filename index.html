@@ -28,6 +28,11 @@
     </div>
     <div id="details">
       <h2 id="author">Ellsworth Kelly</h2>
+      <div id="buttons">
+        <input type="checkbox" id="enable-shader" name="options"
+         checked>
+        <label for="enable-shader">Enable shader</label>
+      </div>
       <h1>Spectrum IV</h1>
     </div>
     <div id="footer">
@@ -90,8 +95,8 @@
     uniform float iTime;
 
   void main() {
-      //gl_FragColor = vec4(vertexColor.x * tan(iTime), vertexColor.y, vertexColor.z, 1.0);
-      gl_FragColor = vertexColor;
+      gl_FragColor = vec4(vertexColor.x * tan(iTime), vertexColor.y, vertexColor.z, 1.0);
+      //gl_FragColor = vertexColor;
     }
   </script>
 
