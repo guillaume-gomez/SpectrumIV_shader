@@ -91,12 +91,21 @@
 
   <script id="fragment-shader-2d-spectrum" type="notjs">
     
-    uniform vec4 vertexColor; // the input variable from the vertex shader (same name and same type)
+    uniform vec3 vertexColor; // the input variable from the vertex shader (same name and same type)
     uniform float iTime;
+    uniform vec3 iResolution;
 
   void main() {
-      gl_FragColor = vec4(vertexColor.x * tan(iTime), vertexColor.y, vertexColor.z, 1.0);
-      //gl_FragColor = vertexColor;
+          vec2 uv = gl_FragCoord.xy/iResolution.xy;
+
+          // Time varying pixel color
+          vec3 gradientColor = clamp(abs(sin(iTime)) * (uv.x + 0.5), 0.25, 1.0) * vertexColor;
+
+          // Output to screen
+          gl_FragColor = vec4(gradientColor, 1);
+
+      // old shader
+      //gl_FragColor = vec4(vertexColor, 1);
     }
   </script>
 

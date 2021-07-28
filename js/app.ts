@@ -131,8 +131,8 @@ function main() {
     const rgb = hexToRgb(COLORS[index]);
     const uniformsSpectrum = {
       iTime: { value: 1 },
-      //iResolution:  { value: new THREE.Vector3() },
-      vertexColor:  { value: new THREE.Vector4(rgb.r/255, rgb.g/255, rgb.b/255, 1) },
+      iResolution:  { value: new THREE.Vector3() },
+      vertexColor:  { value: new THREE.Vector3(rgb.r/255, rgb.g/255, rgb.b/255) },
     };
     uniformsSpectrums.push(uniformsSpectrum);
 
@@ -175,7 +175,7 @@ function main() {
     //uniformsSpectrum.vertexColor.value.set(1, 0, 1, 1);
     uniformsSpectrums.forEach((uniformsSpectrum: any) => {
       if(enableShader) {
-        //uniformsSpectrum.iResolution.value.set(canvas.width, canvas.height, 1);
+        uniformsSpectrum.iResolution.value.set(canvas.width, canvas.height, 1);
         uniformsSpectrum.iTime.value = time;
       } else {
         //reset
@@ -184,11 +184,7 @@ function main() {
     });
 
     renderer.render(scene, camera);
-
-    // not necessary to rerender
-    //if(enableShader) {
-      requestAnimationFrame(render);
-    //}
+    requestAnimationFrame(render);
   }
 
   requestAnimationFrame(render);
