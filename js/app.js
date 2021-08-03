@@ -147,7 +147,7 @@ function main() {
             }
             else {
                 //reset
-                uniformsSpectrum.iTime.value = 0.0;
+                uniformsSpectrum.iTime.value = Math.PI / 2;
             }
         });
         renderer.render(scene, camera);

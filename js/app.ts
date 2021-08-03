@@ -179,7 +179,7 @@ function main() {
         uniformsSpectrum.iTime.value = time;
       } else {
         //reset
-        uniformsSpectrum.iTime.value = 0.0;
+        uniformsSpectrum.iTime.value = Math.PI / 2;
       }
     });
 
