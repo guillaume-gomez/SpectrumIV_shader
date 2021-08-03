@@ -1,6 +1,6 @@
 import * as THREE from "three";
-import FRAGMENT_SHADER_SPECTRUM from "./fragment-shader-2d-spectrum";
-import RAINBOW_FRAGMENT_SHADER from "./rainbow-fragment-shader-2d";
+import FRAGMENT_SHADER_SPECTRUM from "./shaders/fragment/spectrum";
+import RAINBOW_FRAGMENT_SHADER from "./shaders/fragment/rainbow";
 //import VERTEX_SHADER from "./vertex-shader-2d";
 
 
@@ -135,9 +135,9 @@ function main() {
     scene.add(stripe);
   }
 
-  const planeMesh = new THREE.Mesh(plane, material);
+  /*const planeMesh = new THREE.Mesh(plane, material);
   planeMesh.position.setZ(0.2);
-  scene.add(planeMesh);
+  scene.add(planeMesh);*/
 
   const frame = createFrame(frameSize);
   scene.add(...frame);

@@ -49957,26 +49957,10 @@ if ( typeof window !== 'undefined' ) {
 
 /***/ }),
 
-/***/ "./src/fragment-shader-2d-spectrum.ts":
-/*!********************************************!*\
-  !*** ./src/fragment-shader-2d-spectrum.ts ***!
-  \********************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-var FRAGMENT_SHADER_SPECTRUM = "\n  uniform vec3 vertexColor; // the input variable from the vertex shader (same name and same type)\n  uniform float iTime;\n  uniform vec3 iResolution;\n\n  void main() {\n    vec2 uv = gl_FragCoord.xy/iResolution.xy;\n\n    // Time varying pixel color\n    vec3 gradientColor = clamp(abs(sin(iTime)) * (uv.x + 0.5), 0.25, 1.0) * vertexColor;\n\n    // Output to screen\n    gl_FragColor = vec4(gradientColor, 1);\n\n    // old shader\n    //gl_FragColor = vec4(vertexColor, 1);\n  }";
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (FRAGMENT_SHADER_SPECTRUM);
-
-
-/***/ }),
-
-/***/ "./src/rainbow-fragment-shader-2d.ts":
-/*!*******************************************!*\
-  !*** ./src/rainbow-fragment-shader-2d.ts ***!
-  \*******************************************/
+/***/ "./src/shaders/fragment/rainbow.ts":
+/*!*****************************************!*\
+  !*** ./src/shaders/fragment/rainbow.ts ***!
+  \*****************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
@@ -49985,6 +49969,22 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 var RAINBOW_FRAGMENT_SHADER = "#include <common>\n\n  uniform vec3 iResolution;\n  uniform float iTime;\n\n  // By iq: https://www.shadertoy.com/user/iq  \n  // license: Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License.\n  void mainImage( out vec4 fragColor, in vec2 fragCoord )\n  {\n      // Normalized pixel coordinates (from 0 to 1)\n      vec2 uv = fragCoord/iResolution.xy;\n\n      // Time varying pixel color\n      vec3 col = 0.5 + 0.5*cos(iTime+uv.xyx+vec3(0,2,4));\n\n      // Output to screen\n      fragColor = vec4(col,1.0);\n  }\n\n  void main() {\n    mainImage(gl_FragColor, gl_FragCoord.xy);\n  }";
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (RAINBOW_FRAGMENT_SHADER);
+
+
+/***/ }),
+
+/***/ "./src/shaders/fragment/spectrum.ts":
+/*!******************************************!*\
+  !*** ./src/shaders/fragment/spectrum.ts ***!
+  \******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+var FRAGMENT_SHADER_SPECTRUM = "\n  uniform vec3 vertexColor; // the input variable from the vertex shader (same name and same type)\n  uniform float iTime;\n  uniform vec3 iResolution;\n\n  void main() {\n    vec2 uv = gl_FragCoord.xy/iResolution.xy;\n\n    // Time varying pixel color\n    vec3 gradientColor = clamp(abs(sin(iTime)) * (uv.x + 0.5), 0.25, 1.0) * vertexColor;\n\n    // Output to screen\n    gl_FragColor = vec4(gradientColor, 1);\n\n    // old shader\n    //gl_FragColor = vec4(vertexColor, 1);\n  }";
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (FRAGMENT_SHADER_SPECTRUM);
 
 
 /***/ })
@@ -50053,8 +50053,8 @@ var __webpack_exports__ = {};
   \********************/
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var three__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.module.js");
-/* harmony import */ var _fragment_shader_2d_spectrum__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./fragment-shader-2d-spectrum */ "./src/fragment-shader-2d-spectrum.ts");
-/* harmony import */ var _rainbow_fragment_shader_2d__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./rainbow-fragment-shader-2d */ "./src/rainbow-fragment-shader-2d.ts");
+/* harmony import */ var _shaders_fragment_spectrum__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./shaders/fragment/spectrum */ "./src/shaders/fragment/spectrum.ts");
+/* harmony import */ var _shaders_fragment_rainbow__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./shaders/fragment/rainbow */ "./src/shaders/fragment/rainbow.ts");
 
 
 
@@ -50132,8 +50132,8 @@ function main() {
     0.5);
     var scene = new three__WEBPACK_IMPORTED_MODULE_2__.Scene();
     var plane = new three__WEBPACK_IMPORTED_MODULE_2__.PlaneGeometry(0.25, 0.25);
-    var rainbowFragmentShader = _rainbow_fragment_shader_2d__WEBPACK_IMPORTED_MODULE_1__.default;
-    var fragmentShaderSpectrum = _fragment_shader_2d_spectrum__WEBPACK_IMPORTED_MODULE_0__.default;
+    var rainbowFragmentShader = _shaders_fragment_rainbow__WEBPACK_IMPORTED_MODULE_1__.default;
+    var fragmentShaderSpectrum = _shaders_fragment_spectrum__WEBPACK_IMPORTED_MODULE_0__.default;
     var uniforms = {
         iTime: { value: 0 },
         iResolution: { value: new three__WEBPACK_IMPORTED_MODULE_2__.Vector3() },
@@ -50165,9 +50165,9 @@ function main() {
         var stripe = drawStripe(-((matrixWidth - frameSize) / 2) + (widthStripe / 2) + (((matrixWidth - frameSize) * index) / NB_STRIPES), 0, widthStripe, heightStripe, materialSpectrum);
         scene.add(stripe);
     }
-    var planeMesh = new three__WEBPACK_IMPORTED_MODULE_2__.Mesh(plane, material);
+    /*const planeMesh = new THREE.Mesh(plane, material);
     planeMesh.position.setZ(0.2);
-    scene.add(planeMesh);
+    scene.add(planeMesh);*/
     var frame = createFrame(frameSize);
     scene.add.apply(scene, frame);
     function resizeRendererToDisplaySize(renderer) {
