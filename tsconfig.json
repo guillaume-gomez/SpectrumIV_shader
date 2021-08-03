@@ -4,7 +4,7 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "lib": ["es6", "dom"],
-    "module": "amd",
+    "module": "es6",
     "moduleResolution": "node",
     "sourceMap": true,
     "target": "es5",
@@ -16,9 +16,7 @@
     "skipLibCheck": true
   },
   "exclude": [
-    "**/*.spec.ts",
     "node_modules",
-    "vendor",
     "public" 
   ],
   "compileOnSave": false
