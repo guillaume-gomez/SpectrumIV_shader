@@ -29,9 +29,21 @@
     <div id="details">
       <h2 id="author">Ellsworth Kelly</h2>
       <div id="buttons">
-        <input type="checkbox" id="enable-shader" name="options"
-         checked>
-        <label for="enable-shader">Enable shader</label>
+        
+        <div>
+          <input type="radio" id="disabled" name="shader-events" value="disabled">
+          <label for="disabled">Disabled</label>
+        </div>
+
+        <div>
+          <input type="radio" id="gradient" name="shader-events" value="gradient" checked>
+          <label for="gradient">Gradient</label>
+        </div>
+
+        <div>
+          <input type="radio" id="mouse-gradient-y" name="shader-events" value="mouse-gradient-y">
+          <label for="mouse-gradient-y">Mouse Gradient Y</label>
+        </div>
       </div>
       <h1>Spectrum IV</h1>
     </div>

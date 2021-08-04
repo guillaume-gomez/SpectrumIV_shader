@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import FRAGMENT_SHADER_SPECTRUM from "./shaders/fragment/spectrum";
-import RAINBOW_FRAGMENT_SHADER from "./shaders/fragment/rainbow";
 import GRADIENT_FRAGMENT_SHADER from "./shaders/fragment/gradient";
+import RAINBOW_FRAGMENT_SHADER from "./shaders/fragment/rainbow";
 //import VERTEX_SHADER from "./shaders/vertex/vertex-shader-2d";
 
 const NB_STRIPES = 13;
@@ -22,6 +22,7 @@ const COLORS = [
 ]
 
 const ENABLE_SHADER_ID = "enable-shader";
+const SHADER_EVENT_NAME = "shader-events";
 
 function hexToRgb(hex: string) {
   const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
@@ -95,7 +96,7 @@ function main() {
   const plane = new THREE.PlaneGeometry(0.25, 0.25);
 
   const rainbowFragmentShader = RAINBOW_FRAGMENT_SHADER;
-  const fragmentShaderSpectrum = GRADIENT_FRAGMENT_SHADER;
+  const fragmentShaderSpectrum = FRAGMENT_SHADER_SPECTRUM;
 
   const uniforms = {
     iTime: { value: 0 },
@@ -164,15 +165,17 @@ function main() {
 
     //uniformsSpectrum.vertexColor.value.set(1, 0, 1, 1);
     uniformsSpectrums.forEach((uniformsSpectrum: any) => {
-      uniformsSpectrum.iMouse.value.x = mousePositions.x;
-      uniformsSpectrum.iMouse.value.y = mousePositions.y;
       
-      if(enableShader) {
+      if(stateShader !== "disabled") {
+        uniformsSpectrum.iMouse.value.x = mousePositions.x;
+        uniformsSpectrum.iMouse.value.y = mousePositions.y;
+
         uniformsSpectrum.iResolution.value.set(canvas.width, canvas.height, 1);
         uniformsSpectrum.iTime.value = time;
       } else {
         //reset
         uniformsSpectrum.iTime.value = Math.PI / 2;
+
       }
     });
 
@@ -184,8 +187,9 @@ function main() {
 }
 
 
+type StateShaderType = "disabled" | "gradient" | "mouse-gradient-y";
 // global variables
-let enableShader = true;
+let stateShader : StateShaderType = "gradient";
 let mousePositions = { x: 0, y: 0};
 
 let uniformsSpectrums : Object[] = [];
@@ -209,12 +213,25 @@ window.addEventListener("load", function(event) {
  /* setTimeout(() => {
     switchShaderForSpectrum(FRAGMENT_SHADER_SPECTRUM, materialSpectrums);
   }, 7000);*/
-
-  const checkbox = document.getElementById(ENABLE_SHADER_ID);
-  if(checkbox) {
-    checkbox.addEventListener("change", (event: Event) => {
-      const { checked } = event.target as HTMLInputElement;
-      enableShader = checked;
-    })
+  const radios = document.getElementsByName(SHADER_EVENT_NAME)
+  if(radios) {
+    radios.forEach(radio => {
+      radio.addEventListener("change", (event: Event) => {
+        const { value } = event.target as HTMLInputElement;
+        stateShader = value as StateShaderType;
+        switch(value) {
+          case "gradient":
+            switchShaderForSpectrum(FRAGMENT_SHADER_SPECTRUM, materialSpectrums);
+            break;
+          case "mouse-gradient-y":
+            switchShaderForSpectrum(GRADIENT_FRAGMENT_SHADER, materialSpectrums);
+            break;
+          case "disabled":
+          default:
+            break;
+        }
+      });
+    });
   }
+
 });

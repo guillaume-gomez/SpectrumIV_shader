@@ -49987,6 +49987,22 @@ var RAINBOW_FRAGMENT_SHADER = "#include <common>\n\n  uniform vec3 iResolution;\
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (RAINBOW_FRAGMENT_SHADER);
 
 
+/***/ }),
+
+/***/ "./src/shaders/fragment/spectrum.ts":
+/*!******************************************!*\
+  !*** ./src/shaders/fragment/spectrum.ts ***!
+  \******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+var FRAGMENT_SHADER_SPECTRUM = "\n  uniform vec3 vertexColor; // the input variable from the vertex shader (same name and same type)\n  uniform float iTime;\n  uniform vec3 iResolution;\n\n  void main() {\n    vec2 uv = gl_FragCoord.xy/iResolution.xy;\n\n    // Time varying pixel color\n    vec3 gradientColor = clamp(abs(sin(iTime)) * (uv.x + 0.5), 0.25, 1.0) * vertexColor;\n\n    // Output to screen\n    gl_FragColor = vec4(gradientColor, 1);\n\n    // old shader\n    //gl_FragColor = vec4(vertexColor, 1);\n  }";
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (FRAGMENT_SHADER_SPECTRUM);
+
+
 /***/ })
 
 /******/ 	});
@@ -50052,9 +50068,11 @@ var __webpack_exports__ = {};
   !*** ./src/app.ts ***!
   \********************/
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.module.js");
-/* harmony import */ var _shaders_fragment_rainbow__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./shaders/fragment/rainbow */ "./src/shaders/fragment/rainbow.ts");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.module.js");
+/* harmony import */ var _shaders_fragment_spectrum__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./shaders/fragment/spectrum */ "./src/shaders/fragment/spectrum.ts");
 /* harmony import */ var _shaders_fragment_gradient__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./shaders/fragment/gradient */ "./src/shaders/fragment/gradient.ts");
+/* harmony import */ var _shaders_fragment_rainbow__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./shaders/fragment/rainbow */ "./src/shaders/fragment/rainbow.ts");
+
 
 
 
@@ -50076,6 +50094,7 @@ var COLORS = [
     "#eebf00"
 ];
 var ENABLE_SHADER_ID = "enable-shader";
+var SHADER_EVENT_NAME = "shader-events";
 function hexToRgb(hex) {
     var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
     if (!result || result.length <= 2) {
@@ -50102,19 +50121,19 @@ function getContext(canvas) {
     return context;
 }
 function drawStripe(x, y, width, height, material) {
-    var plane = new three__WEBPACK_IMPORTED_MODULE_2__.PlaneGeometry(width, height);
-    var planeMesh = new three__WEBPACK_IMPORTED_MODULE_2__.Mesh(plane, material);
+    var plane = new three__WEBPACK_IMPORTED_MODULE_3__.PlaneGeometry(width, height);
+    var planeMesh = new three__WEBPACK_IMPORTED_MODULE_3__.Mesh(plane, material);
     planeMesh.position.set(x, y, 0);
     return planeMesh;
 }
 function createFrame(frameSize) {
-    var material = new three__WEBPACK_IMPORTED_MODULE_2__.MeshBasicMaterial({ color: 0x000000 });
-    var plane = new three__WEBPACK_IMPORTED_MODULE_2__.PlaneGeometry(1, 1);
-    var planeMesh = new three__WEBPACK_IMPORTED_MODULE_2__.Mesh(plane, material);
+    var material = new three__WEBPACK_IMPORTED_MODULE_3__.MeshBasicMaterial({ color: 0x000000 });
+    var plane = new three__WEBPACK_IMPORTED_MODULE_3__.PlaneGeometry(1, 1);
+    var planeMesh = new three__WEBPACK_IMPORTED_MODULE_3__.Mesh(plane, material);
     planeMesh.position.setZ(-0.1);
-    var material2 = new three__WEBPACK_IMPORTED_MODULE_2__.MeshBasicMaterial({ color: 0xFFFFFF });
-    var plane2 = new three__WEBPACK_IMPORTED_MODULE_2__.PlaneGeometry(1 - frameSize / 2, 1 - frameSize / 2);
-    var planeMesh2 = new three__WEBPACK_IMPORTED_MODULE_2__.Mesh(plane2, material2);
+    var material2 = new three__WEBPACK_IMPORTED_MODULE_3__.MeshBasicMaterial({ color: 0xFFFFFF });
+    var plane2 = new three__WEBPACK_IMPORTED_MODULE_3__.PlaneGeometry(1 - frameSize / 2, 1 - frameSize / 2);
+    var planeMesh2 = new three__WEBPACK_IMPORTED_MODULE_3__.Mesh(plane2, material2);
     planeMesh2.position.setZ(-0.1);
     return [planeMesh, planeMesh2];
 }
@@ -50122,23 +50141,23 @@ function main() {
     var canvas = getCanvas();
     canvas.width = window.innerHeight;
     canvas.height = window.innerHeight;
-    var renderer = new three__WEBPACK_IMPORTED_MODULE_2__.WebGLRenderer({ canvas: canvas });
+    var renderer = new three__WEBPACK_IMPORTED_MODULE_3__.WebGLRenderer({ canvas: canvas });
     renderer.setClearColor(0x000000, 1.0);
-    var camera = new three__WEBPACK_IMPORTED_MODULE_2__.OrthographicCamera(-0.5, // left
+    var camera = new three__WEBPACK_IMPORTED_MODULE_3__.OrthographicCamera(-0.5, // left
     0.5, // right
     0.5, // top
     -0.5, // bottom
     -0.5, // near,
     0.5);
-    var scene = new three__WEBPACK_IMPORTED_MODULE_2__.Scene();
-    var plane = new three__WEBPACK_IMPORTED_MODULE_2__.PlaneGeometry(0.25, 0.25);
-    var rainbowFragmentShader = _shaders_fragment_rainbow__WEBPACK_IMPORTED_MODULE_0__.default;
-    var fragmentShaderSpectrum = _shaders_fragment_gradient__WEBPACK_IMPORTED_MODULE_1__.default;
+    var scene = new three__WEBPACK_IMPORTED_MODULE_3__.Scene();
+    var plane = new three__WEBPACK_IMPORTED_MODULE_3__.PlaneGeometry(0.25, 0.25);
+    var rainbowFragmentShader = _shaders_fragment_rainbow__WEBPACK_IMPORTED_MODULE_2__.default;
+    var fragmentShaderSpectrum = _shaders_fragment_spectrum__WEBPACK_IMPORTED_MODULE_0__.default;
     var uniforms = {
         iTime: { value: 0 },
-        iResolution: { value: new three__WEBPACK_IMPORTED_MODULE_2__.Vector3() },
+        iResolution: { value: new three__WEBPACK_IMPORTED_MODULE_3__.Vector3() },
     };
-    var material = new three__WEBPACK_IMPORTED_MODULE_2__.ShaderMaterial({
+    var material = new three__WEBPACK_IMPORTED_MODULE_3__.ShaderMaterial({
         fragmentShader: rainbowFragmentShader,
         uniforms: uniforms,
     });
@@ -50151,12 +50170,12 @@ function main() {
         var rgb = hexToRgb(COLORS[index]);
         var uniformsSpectrum = {
             iTime: { value: 1 },
-            iResolution: { value: new three__WEBPACK_IMPORTED_MODULE_2__.Vector3() },
-            vertexColor: { value: new three__WEBPACK_IMPORTED_MODULE_2__.Vector3(rgb.r / 255, rgb.g / 255, rgb.b / 255) },
-            iMouse: { value: new three__WEBPACK_IMPORTED_MODULE_2__.Vector2() }
+            iResolution: { value: new three__WEBPACK_IMPORTED_MODULE_3__.Vector3() },
+            vertexColor: { value: new three__WEBPACK_IMPORTED_MODULE_3__.Vector3(rgb.r / 255, rgb.g / 255, rgb.b / 255) },
+            iMouse: { value: new three__WEBPACK_IMPORTED_MODULE_3__.Vector2() }
         };
         uniformsSpectrums.push(uniformsSpectrum);
-        var materialSpectrum = new three__WEBPACK_IMPORTED_MODULE_2__.ShaderMaterial({
+        var materialSpectrum = new three__WEBPACK_IMPORTED_MODULE_3__.ShaderMaterial({
             fragmentShader: fragmentShaderSpectrum,
             uniforms: uniformsSpectrum,
         });
@@ -50187,9 +50206,9 @@ function main() {
         uniforms.iTime.value = time;
         //uniformsSpectrum.vertexColor.value.set(1, 0, 1, 1);
         uniformsSpectrums.forEach(function (uniformsSpectrum) {
-            uniformsSpectrum.iMouse.value.x = mousePositions.x;
-            uniformsSpectrum.iMouse.value.y = mousePositions.y;
-            if (enableShader) {
+            if (stateShader !== "disabled") {
+                uniformsSpectrum.iMouse.value.x = mousePositions.x;
+                uniformsSpectrum.iMouse.value.y = mousePositions.y;
                 uniformsSpectrum.iResolution.value.set(canvas.width, canvas.height, 1);
                 uniformsSpectrum.iTime.value = time;
             }
@@ -50204,7 +50223,7 @@ function main() {
     requestAnimationFrame(render);
 }
 // global variables
-var enableShader = true;
+var stateShader = "gradient";
 var mousePositions = { x: 0, y: 0 };
 var uniformsSpectrums = [];
 var materialSpectrums = [];
@@ -50223,11 +50242,24 @@ window.addEventListener("load", function (event) {
     /* setTimeout(() => {
        switchShaderForSpectrum(FRAGMENT_SHADER_SPECTRUM, materialSpectrums);
      }, 7000);*/
-    var checkbox = document.getElementById(ENABLE_SHADER_ID);
-    if (checkbox) {
-        checkbox.addEventListener("change", function (event) {
-            var checked = event.target.checked;
-            enableShader = checked;
+    var radios = document.getElementsByName(SHADER_EVENT_NAME);
+    if (radios) {
+        radios.forEach(function (radio) {
+            radio.addEventListener("change", function (event) {
+                var value = event.target.value;
+                stateShader = value;
+                switch (value) {
+                    case "gradient":
+                        switchShaderForSpectrum(_shaders_fragment_spectrum__WEBPACK_IMPORTED_MODULE_0__.default, materialSpectrums);
+                        break;
+                    case "mouse-gradient-y":
+                        switchShaderForSpectrum(_shaders_fragment_gradient__WEBPACK_IMPORTED_MODULE_1__.default, materialSpectrums);
+                        break;
+                    case "disabled":
+                    default:
+                        break;
+                }
+            });
         });
     }
 });
