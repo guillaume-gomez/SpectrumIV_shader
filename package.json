@@ -8,7 +8,8 @@
     "webpack": "^5.48.0"
   },
   "scripts": {
-    "start": "webpack"
+    "start": "webpack --mode development --watch",
+    "deploy": "webpack --mode production"
   },
   "devDependencies": {
     "webpack-cli": "^4.7.2"

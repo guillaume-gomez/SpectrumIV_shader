@@ -4,8 +4,7 @@ const ForkTsCheckerWebpackPlugin = require( 'fork-ts-checker-webpack-plugin' );
 
 module.exports = {
     devtool: 'source-map',
-    //mode: 'production',
-    mode: 'development',
+    //mode: 'production or development',
     entry: './src/app.ts',
     // output bundles (location)
     output: {
@@ -31,10 +30,7 @@ module.exports = {
             }
         ]
     },
-    // plugins
     plugins: [
         new ForkTsCheckerWebpackPlugin(), // run TSC on a separate thread
-    ],
-    // set watch mode to `true`
-    watch: true
+    ]
 };
