@@ -1,8 +1,8 @@
 import * as THREE from "three";
 import FRAGMENT_SHADER_SPECTRUM from "./shaders/fragment/spectrum";
 import RAINBOW_FRAGMENT_SHADER from "./shaders/fragment/rainbow";
-//import VERTEX_SHADER from "./vertex-shader-2d";
-
+import GRADIENT_FRAGMENT_SHADER from "./shaders/fragment/gradient";
+//import VERTEX_SHADER from "./shaders/vertex/vertex-shader-2d";
 
 const NB_STRIPES = 13;
 const COLORS = [
@@ -95,7 +95,7 @@ function main() {
   const plane = new THREE.PlaneGeometry(0.25, 0.25);
 
   const rainbowFragmentShader = RAINBOW_FRAGMENT_SHADER;
-  const fragmentShaderSpectrum = FRAGMENT_SHADER_SPECTRUM;
+  const fragmentShaderSpectrum = GRADIENT_FRAGMENT_SHADER;
 
   const uniforms = {
     iTime: { value: 0 },
@@ -110,9 +110,6 @@ function main() {
   const matrixWidth = 1.0;
   const frameSize = 0.2;
 
-  const uniformsSpectrums : Object[] = [];
-  const materialSpectrums : THREE.ShaderMaterial[] = [];
-
   const heightStripe = matrixHeight - frameSize;
   const widthStripe = (matrixWidth -frameSize) / NB_STRIPES;
   for(let index = 0; index < NB_STRIPES; ++index) {
@@ -122,6 +119,7 @@ function main() {
       iTime: { value: 1 },
       iResolution:  { value: new THREE.Vector3() },
       vertexColor:  { value: new THREE.Vector3(rgb.r/255, rgb.g/255, rgb.b/255) },
+      iMouse: { value: new THREE.Vector2() }
     };
     uniformsSpectrums.push(uniformsSpectrum);
 
@@ -134,6 +132,7 @@ function main() {
     let stripe = drawStripe(-((matrixWidth-frameSize)/2) + (widthStripe/2) + (((matrixWidth - frameSize)*index)/NB_STRIPES), 0, widthStripe, heightStripe, materialSpectrum);
     scene.add(stripe);
   }
+
 
   /*const planeMesh = new THREE.Mesh(plane, material);
   planeMesh.position.setZ(0.2);
@@ -162,8 +161,12 @@ function main() {
     uniforms.iResolution.value.set(canvas.width, canvas.height, 1);
     uniforms.iTime.value = time;
 
+
     //uniformsSpectrum.vertexColor.value.set(1, 0, 1, 1);
     uniformsSpectrums.forEach((uniformsSpectrum: any) => {
+      uniformsSpectrum.iMouse.value.x = mousePositions.x;
+      uniformsSpectrum.iMouse.value.y = mousePositions.y;
+      
       if(enableShader) {
         uniformsSpectrum.iResolution.value.set(canvas.width, canvas.height, 1);
         uniformsSpectrum.iTime.value = time;
@@ -181,12 +184,31 @@ function main() {
 }
 
 
-
 // global variables
 let enableShader = true;
+let mousePositions = { x: 0, y: 0};
+
+let uniformsSpectrums : Object[] = [];
+let materialSpectrums : THREE.ShaderMaterial[] = [];
+
+function switchShaderForSpectrum(shaderString: string, spectrumMaterials: THREE.ShaderMaterial[]) {
+  spectrumMaterials.forEach(spectrumMaterial => {
+    spectrumMaterial.fragmentShader = shaderString;
+    spectrumMaterial.needsUpdate=true;
+  });
+}
 
 window.addEventListener("load", function(event) {
   main();
+
+  document.onmousemove = function(e) {
+    mousePositions.x = e.pageX / window.innerWidth;
+    mousePositions.y = e.pageY / window.innerHeight;
+  }
+
+ /* setTimeout(() => {
+    switchShaderForSpectrum(FRAGMENT_SHADER_SPECTRUM, materialSpectrums);
+  }, 7000);*/
 
   const checkbox = document.getElementById(ENABLE_SHADER_ID);
   if(checkbox) {
