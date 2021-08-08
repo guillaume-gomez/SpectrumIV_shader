@@ -2,6 +2,7 @@ import * as THREE from "three";
 import FRAGMENT_SHADER_SPECTRUM from "./shaders/fragment/spectrum";
 import GRADIENT_FRAGMENT_SHADER from "./shaders/fragment/gradient";
 import RAINBOW_FRAGMENT_SHADER from "./shaders/fragment/rainbow";
+import FRAGMENT_SHADER_BLACK_STRIPES from "./shaders/fragment/black_stripes";
 //import VERTEX_SHADER from "./shaders/vertex/vertex-shader-2d";
 
 const NB_STRIPES = 13;
@@ -187,7 +188,7 @@ function main() {
 }
 
 
-type StateShaderType = "disabled" | "gradient" | "mouse-gradient-y";
+type StateShaderType = "disabled" | "gradient" | "mouse-gradient-y" | "black-stripes";
 // global variables
 let stateShader : StateShaderType = "gradient";
 let mousePositions = { x: 0, y: 0};
@@ -225,6 +226,9 @@ window.addEventListener("load", function(event) {
             break;
           case "mouse-gradient-y":
             switchShaderForSpectrum(GRADIENT_FRAGMENT_SHADER, materialSpectrums);
+            break;
+          case "black-stripes":
+            switchShaderForSpectrum(FRAGMENT_SHADER_BLACK_STRIPES, materialSpectrums);
             break;
           case "disabled":
           default:
