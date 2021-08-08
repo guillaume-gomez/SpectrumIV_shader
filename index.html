@@ -29,27 +29,15 @@
     <div id="details">
       <h2 id="author">Ellsworth Kelly</h2>
       <div id="buttons">
-        
-        <div>
-          <input type="radio" id="disabled" name="shader-events" value="disabled">
-          <label for="disabled">Disabled</label>
-        </div>
-
-        <div>
-          <input type="radio" id="gradient" name="shader-events" value="gradient" checked>
-          <label for="gradient">Gradient</label>
-        </div>
-
-        <div>
-          <input type="radio" id="mouse-gradient-y" name="shader-events" value="mouse-gradient-y">
-          <label for="mouse-gradient-y">Mouse Gradient Y</label>
-        </div>
-
-        <div>
-          <input type="radio" id="black-stripes" name="shader-events" value="black-stripes">
-          <label for="black-stripes">Black Stripes</label>
-        </div>
-
+        <select name="shader-events" id="shader-events" value="gradient">
+          <option value="disabled">Disabled</option>
+          <option value="gradient">Gradient</option>
+          <option value="mouse-gradient-y">Mouse Gradient Y</option>
+          <option value="black-stripes">Black Stripes</option>
+          <option value="wave-x">Wave X</option>
+          <option value="moving-dot">Moving Dot</option>
+          <option value="noise-x">Noise X</option>
+        </select>
       </div>
       <h1>Spectrum IV</h1>
     </div>
