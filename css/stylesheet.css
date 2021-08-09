@@ -36,3 +36,13 @@ body {
 #author {
   color:  #202020;
 }
+
+select {
+  font-family: 'Libre Franklin';
+  font-size: 16px;
+  border-radius: 6px;
+}
+
+option {
+  font-style: italic;
+}
