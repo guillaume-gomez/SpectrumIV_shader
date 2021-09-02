@@ -16,7 +16,7 @@ const FRAGMENT_SHADER_BLACK_STRIPES : string = `
   void main() {
     float norm_x = gl_FragCoord.x / iResolution.x;
   
-    float l = mod(norm_x * 4.0 + iTime, 1.0);
+    float l = mod(norm_x * 13.0 + iTime, 1.0);
   
     gl_FragColor = vec4(vertexColor * l, 1.0);
   }`

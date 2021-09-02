@@ -6,6 +6,9 @@ import FRAGMENT_SHADER_BLACK_STRIPES from "./shaders/fragment/black_stripes";
 import FRAGMENT_SHADER_WAVE_X from "./shaders/fragment/wave_x";
 import FRAGMENT_SHADER_MOVING_DOT from "./shaders/fragment/moving_dot";
 import FRAGMENT_SHADER_NOISE_X from "./shaders/fragment/noise_x";
+import FRAGMENT_SHADER_LINE_MOUSE from "./shaders/fragment/line_mouse";
+import FRAGMENT_SHADER_ROT_SQUARE from "./shaders/fragment/rot_square";
+import FRAGMENT_SHADER_VCR from "./shaders/fragment/vcr";
 //import VERTEX_SHADER from "./shaders/vertex/vertex-shader-2d";
 
 const NB_STRIPES = 13;
@@ -197,7 +200,10 @@ type StateShaderType =
   "mouse-gradient-y"|
   "black-stripes" |
   "wave-x" |
-  "noise-x"
+  "noise-x"|
+  "line-mouse"|
+  "rotation-square"|
+  "vcr"
   ;
 // global variables
 let stateShader : StateShaderType = "gradient";
@@ -223,6 +229,7 @@ window.addEventListener("load", function(event) {
 
   const select = document.getElementById(SHADER_EVENT_ID);
   if(select) {
+    (select as HTMLInputElement).value = "gradient";
     select.addEventListener("change", (event: Event) => {
       const { value } = event.target as HTMLInputElement;
       stateShader = value as StateShaderType;
@@ -236,14 +243,23 @@ window.addEventListener("load", function(event) {
         case "black-stripes":
           switchShaderForSpectrum(FRAGMENT_SHADER_BLACK_STRIPES, materialSpectrums);
           break;
-         case "wave-x":
+        case "wave-x":
           switchShaderForSpectrum(FRAGMENT_SHADER_WAVE_X, materialSpectrums);
           break;
-         case "moving-dot":
+        case "moving-dot":
           switchShaderForSpectrum(FRAGMENT_SHADER_MOVING_DOT, materialSpectrums);
           break;
-         case "noise-x":
+        case "noise-x":
           switchShaderForSpectrum(FRAGMENT_SHADER_NOISE_X, materialSpectrums);
+          break;
+        case "line-mouse":
+          switchShaderForSpectrum(FRAGMENT_SHADER_LINE_MOUSE, materialSpectrums);
+          break;
+        case "rotation-square":
+          switchShaderForSpectrum(FRAGMENT_SHADER_ROT_SQUARE, materialSpectrums);
+          break;
+        case "vcr":
+          switchShaderForSpectrum(FRAGMENT_SHADER_VCR, materialSpectrums);
           break;
         case "disabled":
         default:
