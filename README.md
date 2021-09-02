@@ -1,6 +1,6 @@
 # SpectrumIV_shader
 
-On the basis of work on Ellsworth Kelly ![artwork](original.jpg)
+On the basis of Ellsworth Kelly's work ![artwork](original.jpg)
 
 
 
