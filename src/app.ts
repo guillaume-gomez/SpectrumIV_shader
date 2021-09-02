@@ -2,6 +2,13 @@ import * as THREE from "three";
 import FRAGMENT_SHADER_SPECTRUM from "./shaders/fragment/spectrum";
 import GRADIENT_FRAGMENT_SHADER from "./shaders/fragment/gradient";
 import RAINBOW_FRAGMENT_SHADER from "./shaders/fragment/rainbow";
+import FRAGMENT_SHADER_BLACK_STRIPES from "./shaders/fragment/black_stripes";
+import FRAGMENT_SHADER_WAVE_X from "./shaders/fragment/wave_x";
+import FRAGMENT_SHADER_MOVING_DOT from "./shaders/fragment/moving_dot";
+import FRAGMENT_SHADER_NOISE_X from "./shaders/fragment/noise_x";
+import FRAGMENT_SHADER_LINE_MOUSE from "./shaders/fragment/line_mouse";
+import FRAGMENT_SHADER_ROT_SQUARE from "./shaders/fragment/rot_square";
+import FRAGMENT_SHADER_VCR from "./shaders/fragment/vcr";
 //import VERTEX_SHADER from "./shaders/vertex/vertex-shader-2d";
 
 const NB_STRIPES = 13;
@@ -22,7 +29,7 @@ const COLORS = [
 ]
 
 const ENABLE_SHADER_ID = "enable-shader";
-const SHADER_EVENT_NAME = "shader-events";
+const SHADER_EVENT_ID = "shader-events";
 
 function hexToRgb(hex: string) {
   const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
@@ -187,7 +194,17 @@ function main() {
 }
 
 
-type StateShaderType = "disabled" | "gradient" | "mouse-gradient-y";
+type StateShaderType =
+  "disabled"|
+  "gradient" |
+  "mouse-gradient-y"|
+  "black-stripes" |
+  "wave-x" |
+  "noise-x"|
+  "line-mouse"|
+  "rotation-square"|
+  "vcr"
+  ;
 // global variables
 let stateShader : StateShaderType = "gradient";
 let mousePositions = { x: 0, y: 0};
@@ -210,27 +227,44 @@ window.addEventListener("load", function(event) {
     mousePositions.y = e.pageY / window.innerHeight;
   }
 
- /* setTimeout(() => {
-    switchShaderForSpectrum(FRAGMENT_SHADER_SPECTRUM, materialSpectrums);
-  }, 7000);*/
-  const radios = document.getElementsByName(SHADER_EVENT_NAME)
-  if(radios) {
-    radios.forEach(radio => {
-      radio.addEventListener("change", (event: Event) => {
-        const { value } = event.target as HTMLInputElement;
-        stateShader = value as StateShaderType;
-        switch(value) {
-          case "gradient":
-            switchShaderForSpectrum(FRAGMENT_SHADER_SPECTRUM, materialSpectrums);
-            break;
-          case "mouse-gradient-y":
-            switchShaderForSpectrum(GRADIENT_FRAGMENT_SHADER, materialSpectrums);
-            break;
-          case "disabled":
-          default:
-            break;
-        }
-      });
+  const select = document.getElementById(SHADER_EVENT_ID);
+  if(select) {
+    (select as HTMLInputElement).value = "gradient";
+    select.addEventListener("change", (event: Event) => {
+      const { value } = event.target as HTMLInputElement;
+      stateShader = value as StateShaderType;
+      switch(value) {
+        case "gradient":
+          switchShaderForSpectrum(FRAGMENT_SHADER_SPECTRUM, materialSpectrums);
+          break;
+        case "mouse-gradient-y":
+          switchShaderForSpectrum(GRADIENT_FRAGMENT_SHADER, materialSpectrums);
+          break;
+        case "black-stripes":
+          switchShaderForSpectrum(FRAGMENT_SHADER_BLACK_STRIPES, materialSpectrums);
+          break;
+        case "wave-x":
+          switchShaderForSpectrum(FRAGMENT_SHADER_WAVE_X, materialSpectrums);
+          break;
+        case "moving-dot":
+          switchShaderForSpectrum(FRAGMENT_SHADER_MOVING_DOT, materialSpectrums);
+          break;
+        case "noise-x":
+          switchShaderForSpectrum(FRAGMENT_SHADER_NOISE_X, materialSpectrums);
+          break;
+        case "line-mouse":
+          switchShaderForSpectrum(FRAGMENT_SHADER_LINE_MOUSE, materialSpectrums);
+          break;
+        case "rotation-square":
+          switchShaderForSpectrum(FRAGMENT_SHADER_ROT_SQUARE, materialSpectrums);
+          break;
+        case "vcr":
+          switchShaderForSpectrum(FRAGMENT_SHADER_VCR, materialSpectrums);
+          break;
+        case "disabled":
+        default:
+          break;
+      }
     });
   }
 
