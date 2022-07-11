@@ -84,9 +84,10 @@ function createFrame(frameSize: number) {
 
 function main() {
   const canvas = getCanvas();
-  canvas.width  = window.innerHeight;
-  canvas.height = window.innerHeight;
-
+  // padding of 25px (magic number)
+  const size = Math.min(window.innerWidth, window.innerHeight) - 25;
+  canvas.width  = size;
+  canvas.height = size;
   const renderer = new THREE.WebGLRenderer({canvas});
   renderer.setClearColor( 0x000000, 1.0 );
   
@@ -269,3 +270,8 @@ window.addEventListener("load", function(event) {
   }
 
 });
+
+window.addEventListener('resize', () =>
+{
+  main();
+})

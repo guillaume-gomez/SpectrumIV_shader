@@ -5,16 +5,13 @@ body {
 }
 
 #canvas{
-  //width: 100%;
-  //height: 100%;
-  //border: 2px solid green;
   background: white;
 }
 
 
 #main {
   //width: 100%;
-  //border: 2px solid purple;
+  border: 2px solid purple;
   display: flex;
   flex-direction: column;
 }
@@ -28,9 +25,18 @@ body {
 
 
 #details {
+  border: 2px solid green;
   display: flex;
+  flex-direction: row;
   justify-content: space-between;
   align-items: center;
+}
+
+@media (max-width: 768px) {
+  #details {
+    flex-direction: column;
+    justify-content: flex-start;
+  }
 }
 
 #author {
