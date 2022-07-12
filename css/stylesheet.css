@@ -11,7 +11,7 @@ body {
 
 #main {
   //width: 100%;
-  border: 2px solid purple;
+  //border: 2px solid purple;
   display: flex;
   flex-direction: column;
 }
@@ -25,7 +25,7 @@ body {
 
 
 #details {
-  border: 2px solid green;
+  //border: 2px solid green;
   display: flex;
   flex-direction: row;
   justify-content: space-between;

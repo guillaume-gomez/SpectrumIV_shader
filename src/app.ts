@@ -270,8 +270,3 @@ window.addEventListener("load", function(event) {
   }
 
 });
-
-window.addEventListener('resize', () =>
-{
-  main();
-})
