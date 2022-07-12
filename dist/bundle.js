@@ -50265,8 +50265,13 @@ function createFrame(frameSize) {
 }
 function main() {
     var canvas = getCanvas();
-    canvas.width = window.innerHeight;
-    canvas.height = window.innerHeight;
+    var canvasLayout = document.getElementById("canvas-layout");
+    if (!canvasLayout) {
+        throw new Error("cannot find canvas layout id");
+    }
+    var size = Math.min(canvasLayout.offsetWidth, canvasLayout.offsetHeight) - 25;
+    canvas.width = size;
+    canvas.height = size;
     var renderer = new three__WEBPACK_IMPORTED_MODULE_10__.WebGLRenderer({ canvas: canvas });
     renderer.setClearColor(0x000000, 1.0);
     var camera = new three__WEBPACK_IMPORTED_MODULE_10__.OrthographicCamera(-0.5, // left
@@ -50314,19 +50319,8 @@ function main() {
     scene.add(planeMesh);*/
     var frame = createFrame(frameSize);
     scene.add.apply(scene, frame);
-    function resizeRendererToDisplaySize(renderer) {
-        var canvas = renderer.domElement;
-        var width = canvas.clientWidth;
-        var height = canvas.clientHeight;
-        var needResize = canvas.width !== width || canvas.height !== height;
-        if (needResize) {
-            renderer.setSize(width, height, false);
-        }
-        return needResize;
-    }
     function render(time) {
         time *= 0.001; // convert to seconds
-        resizeRendererToDisplaySize(renderer);
         var canvas = renderer.domElement;
         uniforms.iResolution.value.set(canvas.width, canvas.height, 1);
         uniforms.iTime.value = time;
@@ -50347,6 +50341,35 @@ function main() {
         requestAnimationFrame(render);
     }
     requestAnimationFrame(render);
+    window.addEventListener('resize', function () {
+        // Update sizes
+        var canvasLayout = document.getElementById("canvas-layout");
+        if (!canvasLayout) {
+            throw new Error("cannot find canvas layout id");
+        }
+        var size = Math.min(canvasLayout.offsetWidth, canvasLayout.offsetHeight) - 25;
+        //camera.aspect = sizes.width / sizes.height;
+        camera.updateProjectionMatrix();
+        // Update renderer
+        renderer.setSize(size, size);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    });
+    window.addEventListener('dblclick', function () {
+        var fullscreenElement = document.fullscreenElement;
+        if (!canvas) {
+            return;
+        }
+        if (!fullscreenElement) {
+            if (canvas.requestFullscreen) {
+                canvas.requestFullscreen();
+            }
+        }
+        else {
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            }
+        }
+    });
 }
 // global variables
 var stateShader = "gradient";

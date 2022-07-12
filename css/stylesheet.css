@@ -7,14 +7,14 @@ body {
 #canvas{
   //width: 100%;
   //height: 100%;
-  //border: 2px solid green;
+  border: 2px solid blue;
   background: white;
 }
 
 
 #main {
   //width: 100%;
-  //border: 2px solid purple;
+  border: 2px solid purple;
   display: flex;
   flex-direction: column;
 }
@@ -24,6 +24,8 @@ body {
   display: flex;
   justify-content: center;
   background: #CCCCCC;
+  height: 100vh;
+  border: 2px solid green;
 }
 
 
