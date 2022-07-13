@@ -5,6 +5,7 @@ body {
 }
 
 #canvas{
+  //border: 2px solid blue;
   background: white;
 }
 
@@ -21,6 +22,8 @@ body {
   display: flex;
   justify-content: center;
   background: #CCCCCC;
+  height: 100vh;
+  //border: 2px solid green;
 }
 
 
