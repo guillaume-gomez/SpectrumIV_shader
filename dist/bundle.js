@@ -50263,15 +50263,21 @@ function createFrame(frameSize) {
     planeMesh2.position.setZ(-0.1);
     return [planeMesh, planeMesh2];
 }
-function main() {
-    var canvas = getCanvas();
+function resizeCanvas(canvas, renderer, camera) {
     var canvasLayout = document.getElementById("canvas-layout");
     if (!canvasLayout) {
         throw new Error("cannot find canvas layout id");
     }
     var size = Math.min(canvasLayout.offsetWidth, canvasLayout.offsetHeight) - 25;
-    canvas.width = size;
-    canvas.height = size;
+    //camera.aspect = sizes.width / sizes.height;
+    camera.updateProjectionMatrix();
+    // Update renderer
+    renderer.setSize(size, size);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+}
+function main() {
+    var canvas = getCanvas();
+    var canvasLayout = document.getElementById("canvas-layout");
     var renderer = new three__WEBPACK_IMPORTED_MODULE_10__.WebGLRenderer({ canvas: canvas });
     renderer.setClearColor(0x000000, 1.0);
     var camera = new three__WEBPACK_IMPORTED_MODULE_10__.OrthographicCamera(-0.5, // left
@@ -50280,6 +50286,7 @@ function main() {
     -0.5, // bottom
     -0.5, // near,
     0.5);
+    resizeCanvas(canvas, renderer, camera);
     var scene = new three__WEBPACK_IMPORTED_MODULE_10__.Scene();
     var plane = new three__WEBPACK_IMPORTED_MODULE_10__.PlaneGeometry(0.25, 0.25);
     var rainbowFragmentShader = _shaders_fragment_rainbow__WEBPACK_IMPORTED_MODULE_2__.default;
@@ -50343,16 +50350,7 @@ function main() {
     requestAnimationFrame(render);
     window.addEventListener('resize', function () {
         // Update sizes
-        var canvasLayout = document.getElementById("canvas-layout");
-        if (!canvasLayout) {
-            throw new Error("cannot find canvas layout id");
-        }
-        var size = Math.min(canvasLayout.offsetWidth, canvasLayout.offsetHeight) - 25;
-        //camera.aspect = sizes.width / sizes.height;
-        camera.updateProjectionMatrix();
-        // Update renderer
-        renderer.setSize(size, size);
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        resizeCanvas(canvas, renderer, camera);
     });
     window.addEventListener('dblclick', function () {
         var fullscreenElement = document.fullscreenElement;

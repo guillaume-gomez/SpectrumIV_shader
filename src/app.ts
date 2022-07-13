@@ -82,15 +82,23 @@ function createFrame(frameSize: number) {
 }
 
 
+function resizeCanvas(canvas, renderer, camera) {
+  const canvasLayout = document.getElementById("canvas-layout");
+      if(!canvasLayout) {
+        throw new Error("cannot find canvas layout id");
+      }
+      const size = Math.min(canvasLayout.offsetWidth, canvasLayout.offsetHeight) - 25;
+      //camera.aspect = sizes.width / sizes.height;
+      camera.updateProjectionMatrix();
+
+      // Update renderer
+      renderer.setSize(size, size);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+}
+
 function main() {
   const canvas = getCanvas();
   const canvasLayout = document.getElementById("canvas-layout");
-  if(!canvasLayout) {
-    throw new Error("cannot find canvas layout id");
-  }
-  const size = Math.min(canvasLayout.offsetWidth, canvasLayout.offsetHeight) - 25;
-  canvas.width  = size;
-  canvas.height = size;
 
   const renderer = new THREE.WebGLRenderer({canvas});
   renderer.setClearColor( 0x000000, 1.0 );
@@ -104,6 +112,7 @@ function main() {
     -0.5, // near,
      0.5, // far
   );
+  resizeCanvas(canvas, renderer, camera);
   const scene = new THREE.Scene();
   const plane = new THREE.PlaneGeometry(0.25, 0.25);
 
@@ -186,17 +195,7 @@ function main() {
   window.addEventListener('resize', () =>
   {
       // Update sizes
-      const canvasLayout = document.getElementById("canvas-layout");
-      if(!canvasLayout) {
-        throw new Error("cannot find canvas layout id");
-      }
-      const size = Math.min(canvasLayout.offsetWidth, canvasLayout.offsetHeight) - 25;
-      //camera.aspect = sizes.width / sizes.height;
-      camera.updateProjectionMatrix();
-
-      // Update renderer
-      renderer.setSize(size, size);
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      resizeCanvas(canvas, renderer, camera);
   });
 
   window.addEventListener('dblclick', () =>
@@ -219,7 +218,7 @@ function main() {
           {
               document.exitFullscreen()
           }
-          
+
       }
   })
 
