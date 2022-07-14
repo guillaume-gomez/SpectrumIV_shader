@@ -82,11 +82,12 @@ function createFrame(frameSize: number) {
 }
 
 
-function resizeCanvas(canvas, renderer, camera) {
+function resizeCanvas(renderer: THREE.WebGLRenderer, camera : THREE.OrthographicCamera) {
   const canvasLayout = document.getElementById("canvas-layout");
       if(!canvasLayout) {
         throw new Error("cannot find canvas layout id");
       }
+      let canvas = getCanvas();
       const size = Math.min(canvasLayout.offsetWidth, canvasLayout.offsetHeight) - 25;
       //camera.aspect = sizes.width / sizes.height;
       camera.updateProjectionMatrix();
@@ -112,7 +113,7 @@ function main() {
     -0.5, // near,
      0.5, // far
   );
-  resizeCanvas(canvas, renderer, camera);
+  resizeCanvas(renderer, camera);
   const scene = new THREE.Scene();
   const plane = new THREE.PlaneGeometry(0.25, 0.25);
 
@@ -195,7 +196,7 @@ function main() {
   window.addEventListener('resize', () =>
   {
       // Update sizes
-      resizeCanvas(canvas, renderer, camera);
+      resizeCanvas(renderer, camera);
   });
 
   window.addEventListener('dblclick', () =>
