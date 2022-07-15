@@ -87,8 +87,14 @@ function resizeCanvas(renderer: THREE.WebGLRenderer, camera : THREE.Orthographic
       if(!canvasLayout) {
         throw new Error("cannot find canvas layout id");
       }
+
       let canvas = getCanvas();
-      const size = Math.min(canvasLayout.offsetWidth, canvasLayout.offsetHeight) - 25;
+      const size = Math.min(
+        Math.min(canvasLayout.offsetWidth, canvasLayout.offsetHeight),
+        window.innerHeight
+      );
+
+      canvasLayout.style.height = `${size + 10 }px`;
       //camera.aspect = sizes.width / sizes.height;
       camera.updateProjectionMatrix();
 
@@ -99,7 +105,6 @@ function resizeCanvas(renderer: THREE.WebGLRenderer, camera : THREE.Orthographic
 
 function main() {
   const canvas = getCanvas();
-  const canvasLayout = document.getElementById("canvas-layout");
 
   const renderer = new THREE.WebGLRenderer({canvas});
   renderer.setClearColor( 0x000000, 1.0 );

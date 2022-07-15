@@ -50269,7 +50269,8 @@ function resizeCanvas(renderer, camera) {
         throw new Error("cannot find canvas layout id");
     }
     var canvas = getCanvas();
-    var size = Math.min(canvasLayout.offsetWidth, canvasLayout.offsetHeight) - 25;
+    var size = Math.min(Math.min(canvasLayout.offsetWidth, canvasLayout.offsetHeight), window.innerHeight);
+    canvasLayout.style.height = size + 10 + "px";
     //camera.aspect = sizes.width / sizes.height;
     camera.updateProjectionMatrix();
     // Update renderer
@@ -50278,7 +50279,6 @@ function resizeCanvas(renderer, camera) {
 }
 function main() {
     var canvas = getCanvas();
-    var canvasLayout = document.getElementById("canvas-layout");
     var renderer = new three__WEBPACK_IMPORTED_MODULE_10__.WebGLRenderer({ canvas: canvas });
     renderer.setClearColor(0x000000, 1.0);
     var camera = new three__WEBPACK_IMPORTED_MODULE_10__.OrthographicCamera(-0.5, // left

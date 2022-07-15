@@ -21,6 +21,7 @@ body {
   //width: 100%;
   display: flex;
   justify-content: center;
+  align-items: center;
   background: #CCCCCC;
   height: 100vh;
   //border: 2px solid green;
