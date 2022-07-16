@@ -82,10 +82,29 @@ function createFrame(frameSize: number) {
 }
 
 
+function resizeCanvas(renderer: THREE.WebGLRenderer, camera : THREE.OrthographicCamera) {
+  const canvasLayout = document.getElementById("canvas-layout");
+      if(!canvasLayout) {
+        throw new Error("cannot find canvas layout id");
+      }
+
+      let canvas = getCanvas();
+      const size = Math.min(
+        Math.min(canvasLayout.offsetWidth, canvasLayout.offsetHeight),
+        window.innerHeight
+      );
+
+      canvasLayout.style.height = `${size + 10 }px`;
+      //camera.aspect = sizes.width / sizes.height;
+      camera.updateProjectionMatrix();
+
+      // Update renderer
+      renderer.setSize(size, size);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+}
+
 function main() {
   const canvas = getCanvas();
-  canvas.width  = window.innerHeight;
-  canvas.height = window.innerHeight;
 
   const renderer = new THREE.WebGLRenderer({canvas});
   renderer.setClearColor( 0x000000, 1.0 );
@@ -99,6 +118,7 @@ function main() {
     -0.5, // near,
      0.5, // far
   );
+  resizeCanvas(renderer, camera);
   const scene = new THREE.Scene();
   const plane = new THREE.PlaneGeometry(0.25, 0.25);
 
@@ -149,22 +169,8 @@ function main() {
   const frame = createFrame(frameSize);
   scene.add(...frame);
 
-  function resizeRendererToDisplaySize(renderer: THREE.WebGLRenderer) {
-    const canvas = renderer.domElement;
-    const width = canvas.clientWidth;
-    const height = canvas.clientHeight;
-    const needResize = canvas.width !== width || canvas.height !== height;
-    if (needResize) {
-      renderer.setSize(width, height, false);
-    }
-    return needResize;
-  }
-
   function render(time: number) {
     time *= 0.001;  // convert to seconds
-
-    resizeRendererToDisplaySize(renderer);
-
     const canvas = renderer.domElement;
     uniforms.iResolution.value.set(canvas.width, canvas.height, 1);
     uniforms.iTime.value = time;
@@ -191,6 +197,37 @@ function main() {
   }
 
   requestAnimationFrame(render);
+
+  window.addEventListener('resize', () =>
+  {
+      // Update sizes
+      resizeCanvas(renderer, camera);
+  });
+
+  window.addEventListener('dblclick', () =>
+  {
+      const fullscreenElement = document.fullscreenElement;
+      if(!canvas) {
+          return;
+      }
+
+      if(!fullscreenElement)
+      {
+          if(canvas.requestFullscreen)
+          {
+              canvas.requestFullscreen()
+          }
+      }
+      else
+      {
+          if(document.exitFullscreen)
+          {
+              document.exitFullscreen()
+          }
+
+      }
+  })
+
 }
 
 
